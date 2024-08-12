@@ -1,0 +1,13 @@
+.input{
+  padding: 8px;
+  border: 1px solid #5e5e5e;
+  border-radius: 4px;
+}
+
+.box{
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+  margin: 16px 0 16px 0;
+  gap: 8px;
+}

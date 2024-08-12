@@ -1,0 +1,29 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  padding: 8px;
+  border: 1px solid #292929;
+  border-radius:8px;
+}
+
+.label {
+  margin: 8px 0;
+}
+
+.input {
+  margin-bottom: 16px;
+  padding: 8px;
+  border: 1px solid #5e5e5e;
+  border-radius: 4px;
+}
+
+.button{
+  max-width: fit-content;
+  align-self: center;
+}
+
+.error {
+  color: red;
+  margin-bottom: 8px;
+}
