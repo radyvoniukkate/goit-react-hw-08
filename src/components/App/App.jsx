@@ -1,54 +1,47 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import ContactForm from "../ContactForm/ContactForm";
-import ContactList from "../ContactList/ContactList";
-import SearchBox from "../SearchBox/SearchBox";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { fetchContacts } from "/src/redux/contacts/operations";
 import {
   selectContacts,
   selectLoading,
   selectError,
-} from "/src/redux/contactsSlice.js";
-import { selectNameFilter, changeFilter } from "/src/redux/filtersSlice.js";
-import { fetchContacts } from "/src/redux/contactsOps";
+} from "/src/redux/contacts/selectors";
+import Layout from "../Layout/Layout";
+import PrivateRoute from "../Routs/PrivateRoute";
+import RestrictedRoute from "../Routs/RestrictedRoute";
+import HomePage from "/src/pages/HomePage/HomePage";
+import LoginPage from "/src/pages/LoginPage/LoginPage";
+import RegistrationPage from "/src/pages/RegistrationPage/RegistrationPage";
+import ContactsPage from "/src/pages/ContactsPage/ContactsPage";
+import { selectIsRefreshing } from "/src/redux/auth/selectors";
+import { refreshUser } from "/src/redux/auth/operations";
+import { loadToken } from "/src/redux/tokenPersist";
+import axios from "axios";
 
 const App = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectNameFilter);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+  const isRefreshing = useSelector(selectIsRefreshing);
+
+useEffect(() => {
+  loadToken();
+  console.log("Loaded token:", axios.defaults.headers.common.Authorization);
+  dispatch(refreshUser());
+}, [dispatch]);
 
 
- const loading = useSelector(selectLoading);
- const error = useSelector(selectError);
+  useEffect(() => {
+    if (!loading && contacts.length === 0 && !isRefreshing) {
+      dispatch(fetchContacts());
+    }
+  }, [dispatch, loading, contacts.length, isRefreshing]);
 
-  console.log("Loading:", loading);
-  console.log("Error:", error);
-  console.log("Contacts:", contacts);
-console.log("Contacts Type:", typeof contacts, Array.isArray(contacts));
-
- useEffect(() => {
-   if (!loading && contacts.length === 0) {
-     dispatch(fetchContacts());
-   }
- }, [dispatch, loading, contacts.length]);
-
-  const handleSearchChange = (event) => {
-    dispatch(changeFilter(event.target.value));
-  };
-
-const getFilteredContacts = () => {
-  if (!Array.isArray(contacts)) {
-    console.error("Contacts is not an array:", contacts);
-    return [];
+  if (isRefreshing) {
+    return <p>Refreshing user...</p>;
   }
-
-  const normalizedFilter = filter.toLowerCase();
-  return contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(normalizedFilter)
-  );
-};
-
-
-  const filteredContacts = getFilteredContacts();
 
   if (loading) {
     return <p>Loading contacts...</p>;
@@ -59,12 +52,25 @@ const getFilteredContacts = () => {
   }
 
   return (
-    <div>
-      <h1>Phonebook</h1>
-      <ContactForm />
-      <SearchBox searchTerm={filter} onSearchChange={handleSearchChange} />
-      <ContactList contacts={filteredContacts} />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route
+            path="/register"
+            element={<RestrictedRoute component={RegistrationPage} />}
+          />
+          <Route
+            path="/login"
+            element={<RestrictedRoute component={LoginPage} />}
+          />
+          <Route
+            path="/contacts"
+            element={<PrivateRoute component={ContactsPage} />}
+          />
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 

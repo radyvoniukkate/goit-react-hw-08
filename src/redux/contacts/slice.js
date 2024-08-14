@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createSelector } from "reselect"; 
-import { fetchContacts, addContact, deleteContact } from "./contactsOps";
-import { selectNameFilter } from "./filtersSlice";
+import { fetchContacts, addContact, deleteContact } from "./operations";
 
 const contactsSlice = createSlice({
   name: "contacts",
@@ -52,28 +50,5 @@ const contactsSlice = createSlice({
       });
   },
 });
-
-export const selectContacts = (state) => state.contacts.items;
-export const selectLoading = (state) => state.contacts.loading;
-export const selectError = (state) => state.contacts.error;
-
-export const selectFilteredContacts = createSelector(
-  [selectContacts, selectNameFilter],
-  (contacts, filter) => {
-     if (!Array.isArray(contacts)) {
-       console.error("Contacts is not an array:", contacts);
-       return [];
-     }
-
-    const normalizedFilter = filter.toLowerCase();
-    const filteredContacts = contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
-    return filteredContacts;
-  }
-);
-
-
-
 
 export default contactsSlice.reducer;
