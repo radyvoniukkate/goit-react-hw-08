@@ -2,11 +2,6 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { fetchContacts } from "/src/redux/contacts/operations";
-import {
-  selectContacts,
-  selectLoading,
-  selectError,
-} from "/src/redux/contacts/selectors";
 import Layout from "../Layout/Layout";
 import PrivateRoute from "../Routs/PrivateRoute";
 import RestrictedRoute from "../Routs/RestrictedRoute";
@@ -14,41 +9,36 @@ import HomePage from "/src/pages/HomePage/HomePage";
 import LoginPage from "/src/pages/LoginPage/LoginPage";
 import RegistrationPage from "/src/pages/RegistrationPage/RegistrationPage";
 import ContactsPage from "/src/pages/ContactsPage/ContactsPage";
-import { selectIsRefreshing } from "/src/redux/auth/selectors";
+import {
+  selectIsLoggedIn,
+  selectIsRefreshing,
+} from "/src/redux/auth/selectors";
 import { refreshUser } from "/src/redux/auth/operations";
 import { loadToken } from "/src/redux/tokenPersist";
-import axios from "axios";
 
 const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
-  const loading = useSelector(selectLoading);
-  const error = useSelector(selectError);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   const isRefreshing = useSelector(selectIsRefreshing);
 
-useEffect(() => {
-  loadToken();
-  console.log("Loaded token:", axios.defaults.headers.common.Authorization);
-  dispatch(refreshUser());
-}, [dispatch]);
-
-
+  // Завантажуємо токен та оновлюємо користувача, якщо він є
   useEffect(() => {
-    if (!loading && contacts.length === 0 && !isRefreshing) {
+    const tokenAction = loadToken();
+    if (tokenAction) {
+      dispatch(tokenAction);
+      dispatch(refreshUser());
+    }
+  }, [dispatch]);
+
+  // Завантажуємо контакти, якщо користувач увійшов в систему
+  useEffect(() => {
+    if (isLoggedIn) {
       dispatch(fetchContacts());
     }
-  }, [dispatch, loading, contacts.length, isRefreshing]);
+  }, [dispatch, isLoggedIn]);
 
   if (isRefreshing) {
-    return <p>Refreshing user...</p>;
-  }
-
-  if (loading) {
-    return <p>Loading contacts...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
+    return <p>Оновлення користувача...</p>;
   }
 
   return (

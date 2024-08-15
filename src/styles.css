@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
 
+*{
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -43,18 +48,6 @@ h1 {
   margin: 0 10px;
 }
 
-button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #c7c7c7;
-  color: #fff;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #6e6e6e;
-}
 
 .item{
     display: flex;

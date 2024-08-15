@@ -35,6 +35,10 @@ const authSlice = createSlice({
     refreshUserFailure(state) {
       state.isRefreshing = false;
     },
+    // Новий екшн для збереження токена
+    setToken(state, action) {
+      state.token = action.payload;
+    },
   },
 });
 
@@ -44,6 +48,8 @@ export const {
   refreshUserStart,
   refreshUserSuccess,
   refreshUserFailure,
+  setToken, // Експортуємо новий екшн
 } = authSlice.actions;
 
 export default authSlice.reducer;
+

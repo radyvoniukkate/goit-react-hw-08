@@ -12,6 +12,7 @@ import {
 // Налаштування базової URL для всіх запитів
 axios.defaults.baseURL = "https://connections-api.goit.global";
 
+
 // Операція реєстрації користувача
 export const register = createAsyncThunk(
   "auth/register",
@@ -28,7 +29,7 @@ export const register = createAsyncThunk(
     }
   }
 );
-
+ 
 
 // Операція логіну користувача
 export const login = createAsyncThunk(

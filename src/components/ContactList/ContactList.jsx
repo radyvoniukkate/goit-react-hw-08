@@ -1,17 +1,40 @@
-
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Contact from "../Contact/Contact";
+import { fetchContacts } from "/src/redux/contacts/operations";
 import {
   selectLoading,
   selectError,
-  selectFilteredContacts, 
-} from "/src/redux/contacts/selectors.js";
+  selectContacts,
+} from "/src/redux/contacts/selectors";
+import { selectNameFilter } from "/src/redux/filters/selectors";
 
 const ContactList = () => {
-
-  const contacts = useSelector(selectFilteredContacts);
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
+  const filter = useSelector(selectNameFilter);
+
+  useEffect(() => {
+    if (contacts.length === 0) {
+      dispatch(fetchContacts());
+    }
+  }, [dispatch, contacts.length]);
+
+  const getFilteredContacts = () => {
+    if (!Array.isArray(contacts)) {
+      console.error("Contacts is not an array:", contacts);
+      return [];
+    }
+
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  const filteredContacts = getFilteredContacts();
 
   if (loading) {
     return <p>Loading contacts...</p>;
@@ -21,21 +44,13 @@ const ContactList = () => {
     return <p>Error: {error}</p>;
   }
 
-  if (!Array.isArray(contacts)) {
-    console.error(
-      "Unexpected data format: contacts is not an array.",
-      contacts
-    );
-    return <p>Unexpected data format: contacts is not an array.</p>;
-  }
-
-  if (contacts.length === 0) {
+  if (filteredContacts.length === 0) {
     return <p>No contacts available.</p>;
   }
 
   return (
     <ul className="list">
-      {contacts.map((contact) => (
+      {filteredContacts.map((contact) => (
         <Contact key={contact.id} contact={contact} />
       ))}
     </ul>

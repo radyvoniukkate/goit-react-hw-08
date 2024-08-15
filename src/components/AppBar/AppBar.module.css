@@ -1,0 +1,11 @@
+.headRow {
+  height: fit-content;
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  box-shadow: 0 0 10px black;
+  
+}

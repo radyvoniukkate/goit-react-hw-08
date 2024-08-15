@@ -1,0 +1,21 @@
+.controlRow{
+    gap: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.text {
+  text-decoration: none;
+  font-size: 16px;
+  color: black;
+  padding: 5px;
+}
+
+.active {
+  text-decoration: none;
+  font-size: 16px;
+  color: white;
+  background-color: rgb(73, 73, 233);
+  border-radius: 5px;
+  padding: 5px;
+}

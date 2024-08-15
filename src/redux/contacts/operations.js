@@ -3,11 +3,25 @@ import axios from "axios";
 
 // Створення інстансу axios з налаштованим базовим URL
 const baseApi = axios.create({
-  baseURL: "https://66b628d6b5ae2d11eb661982.mockapi.io",
+  baseURL: "https://connections-api.goit.global",
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+// Додавання інтерцептора для авторизації
+baseApi.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Fetch Contacts
 export const fetchContacts = createAsyncThunk(
