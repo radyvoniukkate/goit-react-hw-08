@@ -10,7 +10,7 @@ const validationSchema = Yup.object({
   password: Yup.string().required("Required"),
 });
 
-const LoginPage = () => {
+const LoginForm = () => {
   const dispatch = useDispatch();
 
   const handleSubmit = (values, { setSubmitting }) => {
@@ -55,4 +55,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginForm;

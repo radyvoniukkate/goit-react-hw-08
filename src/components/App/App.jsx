@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"; // Видалено BrowserRouter
 import { fetchContacts } from "/src/redux/contacts/operations";
 import Layout from "../Layout/Layout";
 import PrivateRoute from "../Routs/PrivateRoute";
@@ -42,25 +42,23 @@ const App = () => {
   }
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route
-            path="/register"
-            element={<RestrictedRoute component={RegistrationPage} />}
-          />
-          <Route
-            path="/login"
-            element={<RestrictedRoute component={LoginPage} />}
-          />
-          <Route
-            path="/contacts"
-            element={<PrivateRoute component={ContactsPage} />}
-          />
-        </Route>
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route
+          path="/register"
+          element={<RestrictedRoute component={RegistrationPage} />}
+        />
+        <Route
+          path="/login"
+          element={<RestrictedRoute component={LoginPage} />}
+        />
+        <Route
+          path="/contacts"
+          element={<PrivateRoute component={ContactsPage} />}
+        />
+      </Route>
+    </Routes>
   );
 };
 
