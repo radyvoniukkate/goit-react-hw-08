@@ -30,6 +30,7 @@ export const fetchContacts = createAsyncThunk(
     try {
       const response = await baseApi.get("/contacts");
       return response.data;
+      
     } catch (error) {
       console.log("Error fetching contacts:", error.message); // Лог помилки
       return rejectWithValue(error.message);

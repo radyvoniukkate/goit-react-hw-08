@@ -16,10 +16,11 @@ axios.defaults.baseURL = "https://connections-api.goit.global";
 // Операція реєстрації користувача
 export const register = createAsyncThunk(
   "auth/register",
-  async (userData, { rejectWithValue }) => {
+  async (userData, {dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post("/users/signup", userData);
       persistToken(response.data.token);
+      dispatch(loginSuccess(response.data)); // Автоматичне логінування після реєстрації
       return response.data;
     } catch (error) {
       console.error("API error:", error.response?.data);
@@ -31,19 +32,19 @@ export const register = createAsyncThunk(
 );
  
 
-// Операція логіну користувача
 export const login = createAsyncThunk(
   "auth/login",
   async (userData, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post("/users/login", userData);
-      persistToken(response.data.token);
-      dispatch(loginSuccess(response.data));
+      persistToken(response.data.token); // Зберігаємо токен
+      dispatch(loginSuccess(response.data)); // Зберігаємо дані користувача в Redux
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Login failed");
     }
   }
 );
+
 
 
 // Операція виходу з додатка
@@ -53,14 +54,14 @@ export const logout = createAsyncThunk(
     try {
       await axios.post("/users/logout");
       clearToken();
-      dispatch(logoutAction()); // використовуємо перейменований екшен
+      dispatch(logoutAction()); // Вихід з облікового запису
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }
   }
 );
 
-// Операція оновлення користувача за токеном
+
 export const refreshUser = createAsyncThunk(
   "auth/refresh",
   async (_, { dispatch, getState, rejectWithValue }) => {
@@ -88,3 +89,4 @@ export const refreshUser = createAsyncThunk(
     }
   }
 );
+

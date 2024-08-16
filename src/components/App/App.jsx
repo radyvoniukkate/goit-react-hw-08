@@ -21,14 +21,13 @@ const App = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const isRefreshing = useSelector(selectIsRefreshing);
 
-  // Завантажуємо токен та оновлюємо користувача, якщо він є
-  useEffect(() => {
-    const tokenAction = loadToken();
-    if (tokenAction) {
-      dispatch(tokenAction);
-      dispatch(refreshUser());
-    }
-  }, [dispatch]);
+ useEffect(() => {
+   const action = loadToken();
+   if (action) {
+     dispatch(action);
+     dispatch(refreshUser()); // Оновлюємо користувача, щоб отримати його дані
+   }
+ }, [dispatch]);
 
   // Завантажуємо контакти, якщо користувач увійшов в систему
   useEffect(() => {

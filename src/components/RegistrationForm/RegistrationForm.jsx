@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { register } from "/src/redux/auth/operations";
@@ -15,15 +16,18 @@ const validationSchema = Yup.object({
 
 const RegistrationForm = () => {
   const dispatch = useDispatch();
-  const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      await dispatch(register(values)).unwrap();
-    } catch (error) {
-      console.error("Registration error:", error.message, error.response?.data);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+ const navigate = useNavigate(); // Додати useNavigate
+
+ const handleSubmit = async (values, { setSubmitting }) => {
+   try {
+     await dispatch(register(values)).unwrap();
+     navigate("/contacts"); // Перенаправлення після реєстрації
+   } catch (error) {
+     console.error("Registration error:", error.message, error.response?.data);
+   } finally {
+     setSubmitting(false);
+   }
+ };
 
   return (
     <div className="registration-page">
